@@ -1,0 +1,71 @@
+// ── ng-hub-ui-icons base styles ──────────────────────────────────────────────
+//
+// Loaded globally by `<hub-icon>` (ViewEncapsulation.None). For directive-only
+// usage (`[hubIcon]` without ever rendering `<hub-icon>`), include this sheet:
+//
+//   @use 'ng-hub-ui-icons/styles' as *;   // or 'ng-hub-ui-icons/styles/icon'
+//
+// Theme any icon set uniformly through the `--hub-icon-*` tokens below.
+
+:where(.hub-icon) {
+	--hub-icon-size: 1em;
+	--hub-icon-color: currentColor;
+
+	// Material Symbols (and other variable icon fonts) variable-font axes.
+	// Ignored by non-variable sets such as Font Awesome or Bootstrap Icons.
+	--hub-icon-fill: 0;
+	--hub-icon-weight: 400;
+	--hub-icon-grade: 0;
+	--hub-icon-optical-size: 24;
+}
+
+.hub-icon {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	inline-size: var(--hub-icon-size);
+	block-size: var(--hub-icon-size);
+	font-size: var(--hub-icon-size);
+	line-height: 1;
+	color: var(--hub-icon-color);
+	vertical-align: middle;
+	flex: 0 0 auto;
+}
+
+.hub-icon__glyph {
+	font-size: inherit;
+	line-height: 1;
+	font-variation-settings:
+		'FILL' var(--hub-icon-fill),
+		'wght' var(--hub-icon-weight),
+		'GRAD' var(--hub-icon-grade),
+		'opsz' var(--hub-icon-optical-size);
+}
+
+.hub-icon__svg,
+.hub-icon > svg,
+.hub-icon__img {
+	inline-size: var(--hub-icon-size);
+	block-size: var(--hub-icon-size);
+}
+
+.hub-icon__svg {
+	display: inline-flex;
+}
+
+.hub-icon__svg svg,
+.hub-icon > svg {
+	inline-size: 100%;
+	block-size: 100%;
+	fill: var(--hub-icon-color);
+}
+
+.hub-icon--spin {
+	animation: hub-icon-spin 1s linear infinite;
+}
+
+@keyframes hub-icon-spin {
+	to {
+		transform: rotate(360deg);
+	}
+}

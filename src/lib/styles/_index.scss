@@ -1,0 +1,6 @@
+// ── Public SCSS API for ng-hub-ui-icons ──────────────────────────────────────
+//
+//   @use 'ng-hub-ui-icons/styles' as *;
+//
+// Forwards the base styles + the `--hub-icon-*` token defaults.
+@forward 'icon-base';

@@ -1,0 +1,37 @@
+{
+  "name": "ng-hub-ui-icons",
+  "version": "22.0.0",
+  "description": "Icon-set-agnostic Angular icon component and directive — render Font Awesome, Bootstrap Icons, Material Symbols, Solar or your own SVGs through one API, with no hard dependency on any icon pack. Part of the ng-hub-ui ecosystem.",
+  "license": "MIT",
+  "author": "Carlos Morcillo <carlos.morcillo@me.com> (https://www.carlosmorcillo.com)",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/carlos-morcillo/ng-hub-ui-icons.git"
+  },
+  "bugs": {
+    "url": "https://github.com/carlos-morcillo/ng-hub-ui-icons/issues",
+    "email": "carlos.morcillo@me.com"
+  },
+  "homepage": "https://hubui.dev/",
+  "keywords": [
+    "angular",
+    "icon",
+    "icons",
+    "font-awesome",
+    "bootstrap-icons",
+    "material-symbols",
+    "solar",
+    "svg",
+    "ui-component",
+    "ng-hub-ui",
+    "signals"
+  ],
+  "peerDependencies": {
+    "@angular/common": ">=21.0.0",
+    "@angular/core": ">=21.0.0"
+  },
+  "dependencies": {
+    "tslib": "^2.3.0"
+  },
+  "sideEffects": false
+}

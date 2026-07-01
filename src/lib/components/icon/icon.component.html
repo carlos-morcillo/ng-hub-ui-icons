@@ -1,0 +1,16 @@
+@switch (spec().kind) {
+	@case ('svg') {
+		<span class="hub-icon__svg" [innerHTML]="safeSvg()"></span>
+	}
+	@case ('use') {
+		<svg class="hub-icon__svg" focusable="false" aria-hidden="true">
+			<use [attr.href]="href()"></use>
+		</svg>
+	}
+	@case ('img') {
+		<img class="hub-icon__img" [src]="src()" [alt]="imgAlt()" />
+	}
+	@default {
+		<i class="hub-icon__glyph {{ classes() }}" aria-hidden="true">{{ text() }}</i>
+	}
+}

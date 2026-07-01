@@ -1,0 +1,4 @@
+// Compiled entry point for ng-hub-ui-icons base styles.
+// Import this when you use the `[hubIcon]` directive without rendering
+// `<hub-icon>` anywhere (the component injects these styles on its own).
+@use 'icon-base';

@@ -1,0 +1,3 @@
+// `<hub-icon>` renders with ViewEncapsulation.None, so these base rules are
+// emitted once and apply to every icon (component and `[hubIcon]` directive).
+@use '../../styles/icon-base';
