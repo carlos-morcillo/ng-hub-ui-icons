@@ -2,5 +2,7 @@
 //
 //   @use 'ng-hub-ui-icons/styles' as *;
 //
-// Forwards the base styles + the `--hub-icon-*` token defaults.
+// Forwards the base styles + the `--hub-icon-*` token defaults, and the
+// `hub-icon-theme(...)` one-call theming mixin.
 @forward 'icon-base';
+@forward 'icon-theme';

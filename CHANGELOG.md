@@ -5,6 +5,12 @@ All notable changes to `ng-hub-ui-icons` are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [22.1.0] - 2026-07-07
+
+### Added
+
+- **`hub-icon-theme(...)` mixin** — one-call token theming for `<hub-icon>` / `[hubIcon]`: `color`, `size`, and the variable-font axes `weight` / `fill` / `grade` / `optical-size`. Null-defaulted and additive; `@use 'ng-hub-ui-icons/styles' as *;`.
+
 ## [22.0.0] - 2026-07-01
 
 ### Added

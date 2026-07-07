@@ -1,0 +1,44 @@
+// ─────────────────────────────────────────────────────────────────────────
+// hub-icon-theme — one-call token theming for `<hub-icon>` / `[hubIcon]`
+// ─────────────────────────────────────────────────────────────────────────
+//
+// Override the `--hub-icon-*` design tokens in a single include. Every parameter
+// is OPTIONAL and defaults to `null`: only the parameters you pass are emitted, so
+// the rest keep the defaults. `color` defaults to `currentColor`, so an icon inherits
+// its surrounding text colour unless themed. Token-based and self-contained.
+//
+// @example
+//
+//   @use 'ng-hub-ui-icons/styles' as *;
+//
+//   .toolbar { @include hub-icon-theme($color: var(--hub-sys-color-primary), $size: 1.5rem); }
+//
+// scss-docs-start hub-icon-theme
+@mixin hub-icon-theme(
+	$color: null,          // glyph colour (default: currentColor)
+	$size: null,           // glyph size (font-size / box)
+	$weight: null,         // variable-font weight axis
+	$fill: null,           // variable-font fill axis (0 outline .. 1 filled)
+	$grade: null,          // variable-font grade axis
+	$optical-size: null    // variable-font optical-size axis
+) {
+	@if $color != null {
+		--hub-icon-color: #{$color};
+	}
+	@if $size != null {
+		--hub-icon-size: #{$size};
+	}
+	@if $weight != null {
+		--hub-icon-weight: #{$weight};
+	}
+	@if $fill != null {
+		--hub-icon-fill: #{$fill};
+	}
+	@if $grade != null {
+		--hub-icon-grade: #{$grade};
+	}
+	@if $optical-size != null {
+		--hub-icon-optical-size: #{$optical-size};
+	}
+}
+// scss-docs-end hub-icon-theme
