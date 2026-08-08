@@ -7,11 +7,11 @@
 
 Renderizado de iconos **agnóstico al set** para Angular. Muestra **Font Awesome**, **Bootstrap Icons**, **Material Symbols**, **Solar** o tus **propios SVG** con una única API — y **sin dependencia dura** de ningún paquete de iconos. Tú cargas el CSS/fuente/SVG del set en tu app; `ng-hub-ui-icons` solo conoce la convención de nombres de cada set y los tematiza de forma uniforme con variables CSS `--hub-icon-*`.
 
-Parte del ecosistema [ng-hub-ui](https://hubui.dev/).
+Parte del ecosistema [ng-hub-ui](https://hubui.dev/en/).
 
 ## Documentación y ejemplos en vivo
 
-Documentación completa y ejemplos interactivos: **[hubui.dev](https://hubui.dev/)**
+Documentación completa y ejemplos interactivos: **[hubui.dev](https://hubui.dev/en/)**
 
 ## 🚀 Inicio rápido
 
