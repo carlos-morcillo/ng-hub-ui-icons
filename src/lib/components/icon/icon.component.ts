@@ -112,9 +112,7 @@ export class HubIconComponent {
 	protected readonly src = computed(() => (this.spec().kind === 'img' ? (this.spec() as HubIconImgSpec).src : ''));
 
 	/** Image alt text for the `img` render kind. */
-	protected readonly imgAlt = computed(() =>
-		this.spec().kind === 'img' ? ((this.spec() as HubIconImgSpec).alt ?? '') : ''
-	);
+	protected readonly imgAlt = computed(() => (this.spec().kind === 'img' ? ((this.spec() as HubIconImgSpec).alt ?? '') : ''));
 
 	constructor() {
 		// Apply the active pack's optional CSS-variable bridge as inline custom

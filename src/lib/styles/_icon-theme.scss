@@ -15,12 +15,17 @@
 //
 // scss-docs-start hub-icon-theme
 @mixin hub-icon-theme(
-	$color: null,          // glyph colour (default: currentColor)
-	$size: null,           // glyph size (font-size / box)
-	$weight: null,         // variable-font weight axis
-	$fill: null,           // variable-font fill axis (0 outline .. 1 filled)
-	$grade: null,          // variable-font grade axis
-	$optical-size: null    // variable-font optical-size axis
+	$color: null,
+	// glyph colour (default: currentColor)
+	$size: null,
+	// glyph size (font-size / box)
+	$weight: null,
+	// variable-font weight axis
+	$fill: null,
+	// variable-font fill axis (0 outline .. 1 filled)
+	$grade: null,
+	// variable-font grade axis
+	$optical-size: null // variable-font optical-size axis
 ) {
 	@if $color != null {
 		--hub-icon-color: #{$color};
