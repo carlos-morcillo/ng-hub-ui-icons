@@ -11,7 +11,7 @@ Part of the [ng-hub-ui](https://hubui.dev/en/) ecosystem.
 
 ## Documentation and Live Examples
 
-Full documentation and interactive examples: **[hubui.dev](https://hubui.dev/en/)**
+Full documentation: **[hubui.dev/en/icons/overview/](https://hubui.dev/en/icons/overview/)** · Interactive examples: **[hubui.dev/en/icons/examples/](https://hubui.dev/en/icons/examples/)**
 
 ## 🚀 Quick Start
 
@@ -168,7 +168,8 @@ No adapter needed — just project a `<hub-icon>` as content. For example, insid
 
 | Input | Type | Default | Description |
 | ----- | ---- | ------- | ----------- |
-| `name` | `string` | — | Icon name. Accepts the `pack:variant:name` / `pack:name` shorthand. |
+| `name` | `string` | — | Icon name. Accepts the `pack:variant:name` / `pack:name` shorthand. Required on `<hub-icon>`; on `[hubIcon]` it is optional and falls back to the value bound to the directive. |
+| `hubIcon` | `string` | `''` | Icon name bound through the directive attribute itself (`[hubIcon]="'house'"`); `name` wins when both are set. _(directive only)_ |
 | `pack` | `string` | `defaultPack` | Pack key; overrides a shorthand pack. |
 | `variant` | `string` | pack default | Variant; overrides a shorthand variant. |
 | `size` | `string` | `1em` | Per-instance size (`--hub-icon-size`). _(component only)_ |

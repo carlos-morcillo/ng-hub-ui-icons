@@ -1,11 +1,27 @@
-import { Component, input } from '@angular/core';
+import { Component, ErrorHandler, input } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { HubIconPack } from '../models/icon-pack';
 import { bootstrapPack } from '../packs/bootstrap';
 import { faPack } from '../packs/font-awesome';
 import { materialSymbolsPack } from '../packs/material-symbols';
 import { svgPack } from '../packs/svg-pack';
 import { provideHubIcons } from '../services/icons-config';
 import { HubIconDirective } from './icon.directive';
+
+/** Pack that themes through its own custom properties, i.e. one declaring a `cssVars` bridge. */
+const themedPack: HubIconPack = {
+	resolve: (name) => ({ kind: 'classes', classes: `themed themed-${name}` }),
+	cssVars: { '--themed-color': 'var(--hub-icon-color)' }
+};
+
+/** Stands in for whatever the consuming application does with its errors. */
+class RecordingErrorHandler implements ErrorHandler {
+	readonly seen: unknown[] = [];
+
+	handleError(error: unknown): void {
+		this.seen.push(error);
+	}
+}
 
 /**
  * Host applying `[hubIcon]` to an element that keeps its own class. Uses signal
@@ -39,9 +55,11 @@ describe('HubIconDirective', () => {
 						fa: faPack(),
 						bi: bootstrapPack(),
 						ms: materialSymbolsPack(),
-						svg: svgPack({ map: { star: '<svg data-testid="star"></svg>' } })
+						svg: svgPack({ map: { star: '<svg data-testid="star"></svg>' } }),
+						themed: themedPack
 					}
-				})
+				}),
+				{ provide: ErrorHandler, useClass: RecordingErrorHandler }
 			]
 		});
 
@@ -89,11 +107,35 @@ describe('HubIconDirective', () => {
 		expect(el().querySelector('svg[data-testid="star"]')).toBeTruthy();
 	});
 
+	it('applies the pack cssVars bridge when the pack comes from the shorthand', () => {
+		setInput('name', 'themed:house');
+		fixture.detectChanges();
+
+		expect(el().style.getPropertyValue('--themed-color')).toBe('var(--hub-icon-color)');
+	});
+
 	it('clears content when the name becomes empty', () => {
 		setInput('name', '');
 		fixture.detectChanges();
 
 		expect(el().textContent).toBe('');
 		expect(el().classList.contains('fa-house')).toBe(false);
+	});
+
+	it('hands an unresolvable name to the application error handler and writes nothing to the console', () => {
+		const consoleError = vi.spyOn(console, 'error').mockReturnValue(undefined);
+
+		try {
+			setInput('pack', 'missing');
+			fixture.detectChanges();
+
+			const handler = TestBed.inject(ErrorHandler) as RecordingErrorHandler;
+
+			expect(handler.seen.length).toBeGreaterThan(0);
+			expect(String(handler.seen[0])).toContain('Unknown icon pack');
+			expect(consoleError).not.toHaveBeenCalled();
+		} finally {
+			consoleError.mockRestore();
+		}
 	});
 });

@@ -35,14 +35,18 @@ export class HubIconRegistry {
 	}
 
 	/**
-	 * Returns the `cssVars` bridge of the pack that would handle the given key
-	 * (or the default pack), if any.
+	 * Returns the `cssVars` bridge of the pack that would handle the given
+	 * reference, if any. The reference is expanded exactly as {@link resolve}
+	 * expands it, so the bridge always comes from the pack that draws the icon —
+	 * including when the pack only travels inside the `pack:variant:name`
+	 * shorthand instead of the explicit `pack` argument.
 	 *
-	 * @param pack - Explicit pack key; falls back to `defaultPack`.
+	 * @param pack - Explicit pack key; wins over a shorthand pack and `defaultPack`.
+	 * @param name - Icon name, optionally in `pack:variant:name` / `pack:name` form.
 	 * @returns The pack's CSS-variable bridge, or `undefined`.
 	 */
-	cssVars(pack?: string): Readonly<Record<string, string>> | undefined {
-		const key = pack ?? this.#config.defaultPack;
+	cssVars(pack?: string, name?: string): Readonly<Record<string, string>> | undefined {
+		const key = this.#parse(name ?? '', pack).pack ?? this.#config.defaultPack;
 		return key ? this.#config.packs[key]?.cssVars : undefined;
 	}
 

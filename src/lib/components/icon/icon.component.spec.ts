@@ -1,3 +1,4 @@
+import { ErrorHandler } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { HubIconPack } from '../../models/icon-pack';
 import { bootstrapPack } from '../../packs/bootstrap';
@@ -9,6 +10,20 @@ import { HubIconComponent } from './icon.component';
 
 const usePack: HubIconPack = { resolve: (name) => ({ kind: 'use', href: `sprite.svg#${name}` }) };
 const imgPack: HubIconPack = { resolve: (name) => ({ kind: 'img', src: `/icons/${name}.png`, alt: name }) };
+/** Pack that themes through its own custom properties, i.e. one declaring a `cssVars` bridge. */
+const themedPack: HubIconPack = {
+	resolve: (name) => ({ kind: 'classes', classes: `themed themed-${name}` }),
+	cssVars: { '--themed-color': 'var(--hub-icon-color)' }
+};
+
+/** Stands in for whatever the consuming application does with its errors. */
+class RecordingErrorHandler implements ErrorHandler {
+	readonly seen: unknown[] = [];
+
+	handleError(error: unknown): void {
+		this.seen.push(error);
+	}
+}
 
 describe('HubIconComponent', () => {
 	let fixture: ComponentFixture<HubIconComponent>;
@@ -37,9 +52,11 @@ describe('HubIconComponent', () => {
 						ms: materialSymbolsPack(),
 						svg: svgPack({ map: { star: '<svg data-testid="star"></svg>' } }),
 						use: usePack,
-						img: imgPack
+						img: imgPack,
+						themed: themedPack
 					}
-				})
+				}),
+				{ provide: ErrorHandler, useClass: RecordingErrorHandler }
 			]
 		});
 	});
@@ -113,8 +130,34 @@ describe('HubIconComponent', () => {
 		expect(root().style.getPropertyValue('--hub-icon-color')).toBe('rebeccapurple');
 	});
 
+	it('applies the pack cssVars bridge of an explicitly named pack', () => {
+		render({ name: 'star', pack: 'themed' });
+		expect(root().style.getPropertyValue('--themed-color')).toBe('var(--hub-icon-color)');
+	});
+
+	it('applies the pack cssVars bridge when the pack comes from the shorthand', () => {
+		render({ name: 'themed:star' });
+		expect(root().style.getPropertyValue('--themed-color')).toBe('var(--hub-icon-color)');
+	});
+
 	it('fails soft (no throw) when the pack is unknown', () => {
 		expect(() => render({ name: 'house', pack: 'missing' })).not.toThrow();
 		expect(query('.hub-icon__glyph')).toBeTruthy();
+	});
+
+	it('hands an unresolvable name to the application error handler and writes nothing to the console', () => {
+		const consoleError = vi.spyOn(console, 'error').mockReturnValue(undefined);
+
+		try {
+			render({ name: 'house', pack: 'missing' });
+
+			const handler = TestBed.inject(ErrorHandler) as RecordingErrorHandler;
+
+			expect(handler.seen.length).toBeGreaterThan(0);
+			expect(String(handler.seen[0])).toContain('Unknown icon pack');
+			expect(consoleError).not.toHaveBeenCalled();
+		} finally {
+			consoleError.mockRestore();
+		}
 	});
 });

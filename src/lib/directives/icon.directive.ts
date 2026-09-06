@@ -1,4 +1,4 @@
-import { Directive, effect, ElementRef, inject, input } from '@angular/core';
+import { Directive, effect, ElementRef, ErrorHandler, inject, input } from '@angular/core';
 import { HubIconClassesSpec } from '../models/icon-render-spec';
 import { HubIconRegistry } from '../services/icon-registry.service';
 
@@ -25,6 +25,7 @@ import { HubIconRegistry } from '../services/icon-registry.service';
 export class HubIconDirective {
 	readonly #registry = inject(HubIconRegistry);
 	readonly #host = inject(ElementRef<HTMLElement>);
+	readonly #errorHandler = inject(ErrorHandler);
 
 	/** Icon name via the directive attribute: `[hubIcon]="'house'"`. */
 	readonly hubIcon = input<string>('');
@@ -59,15 +60,18 @@ export class HubIconDirective {
 
 			let spec;
 
+			// The failure goes to the application's `ErrorHandler`, not to the console: an
+			// unresolvable icon is the consuming application's bug and belongs wherever that
+			// application already routes its errors, which a library cannot decide for it.
 			try {
 				spec = this.#registry.resolve(reference, this.pack(), this.variant());
 			} catch (error) {
-				console.error(error);
+				this.#errorHandler.handleError(error);
 				el.textContent = '';
 				return;
 			}
 
-			this.#applyCssVars(el);
+			this.#applyCssVars(el, reference);
 
 			switch (spec.kind) {
 				case 'classes': {
@@ -93,8 +97,8 @@ export class HubIconDirective {
 	}
 
 	/** Applies the active pack's optional CSS-variable bridge to the host. */
-	#applyCssVars(el: HTMLElement): void {
-		const vars = this.#registry.cssVars(this.pack());
+	#applyCssVars(el: HTMLElement, reference: string): void {
+		const vars = this.#registry.cssVars(this.pack(), reference);
 
 		if (!vars) {
 			return;

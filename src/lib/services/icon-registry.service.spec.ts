@@ -64,4 +64,32 @@ describe('HubIconRegistry', () => {
 		expect(registry.cssVars()).toEqual({ '--x': 'var(--hub-icon-color)' });
 		expect(registry.cssVars('x')).toEqual({ '--x': 'var(--hub-icon-color)' });
 	});
+
+	it('reads the cssVars bridge from the pack named in the shorthand', () => {
+		const registry = registryWith({
+			defaultPack: 'fa',
+			packs: {
+				fa: faPack(),
+				themed: {
+					resolve: () => ({ kind: 'classes', classes: 'themed' }),
+					cssVars: { '--themed': 'var(--hub-icon-color)' }
+				}
+			}
+		});
+		expect(registry.cssVars(undefined, 'themed:home')).toEqual({ '--themed': 'var(--hub-icon-color)' });
+		expect(registry.cssVars(undefined, 'themed:bold:home')).toEqual({ '--themed': 'var(--hub-icon-color)' });
+	});
+
+	it('lets an explicit pack win over the shorthand for the bridge', () => {
+		const registry = registryWith({
+			packs: {
+				fa: faPack(),
+				themed: {
+					resolve: () => ({ kind: 'classes', classes: 'themed' }),
+					cssVars: { '--themed': 'var(--hub-icon-color)' }
+				}
+			}
+		});
+		expect(registry.cssVars('fa', 'themed:home')).toBeUndefined();
+	});
 });

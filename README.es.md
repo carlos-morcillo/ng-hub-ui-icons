@@ -11,7 +11,7 @@ Parte del ecosistema [ng-hub-ui](https://hubui.dev/en/).
 
 ## Documentación y ejemplos en vivo
 
-Documentación completa y ejemplos interactivos: **[hubui.dev](https://hubui.dev/en/)**
+Documentación completa: **[hubui.dev/en/icons/overview/](https://hubui.dev/en/icons/overview/)** · Ejemplos interactivos: **[hubui.dev/en/icons/examples/](https://hubui.dev/en/icons/examples/)**
 
 ## 🚀 Inicio rápido
 
@@ -168,7 +168,8 @@ Sin adapter — basta proyectar un `<hub-icon>` como contenido. Por ejemplo, den
 
 | Input | Tipo | Por defecto | Descripción |
 | ----- | ---- | ----------- | ----------- |
-| `name` | `string` | — | Nombre del icono. Acepta el atajo `pack:variant:name` / `pack:name`. |
+| `name` | `string` | — | Nombre del icono. Acepta el atajo `pack:variant:name` / `pack:name`. Obligatorio en `<hub-icon>`; en `[hubIcon]` es opcional y recurre al valor enlazado en la directiva. |
+| `hubIcon` | `string` | `''` | Nombre del icono enlazado en el propio atributo de la directiva (`[hubIcon]="'house'"`); `name` prevalece si se indican ambos. _(solo directiva)_ |
 | `pack` | `string` | `defaultPack` | Clave del pack; sobrescribe el pack del atajo. |
 | `variant` | `string` | por defecto del pack | Variante; sobrescribe la variante del atajo. |
 | `size` | `string` | `1em` | Tamaño por instancia (`--hub-icon-size`). _(solo componente)_ |

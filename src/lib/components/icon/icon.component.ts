@@ -5,6 +5,7 @@ import {
 	computed,
 	effect,
 	ElementRef,
+	ErrorHandler,
 	inject,
 	input,
 	ViewEncapsulation
@@ -55,6 +56,7 @@ export class HubIconComponent {
 	readonly #registry = inject(HubIconRegistry);
 	readonly #sanitizer = inject(DomSanitizer);
 	readonly #host = inject(ElementRef<HTMLElement>);
+	readonly #errorHandler = inject(ErrorHandler);
 
 	/** Icon name. Accepts the `pack:variant:name` / `pack:name` shorthand. */
 	readonly name = input.required<string>();
@@ -80,12 +82,20 @@ export class HubIconComponent {
 	/** Continuously rotates the icon (e.g. for loaders). */
 	readonly spin = input(false, { transform: booleanAttribute });
 
-	/** Resolved render spec; fails soft to an empty glyph and logs on error. */
+	/**
+	 * Resolved render spec; fails soft to an empty glyph when the name cannot be resolved.
+	 *
+	 * The failure goes to the application's `ErrorHandler` rather than straight to the
+	 * console: an unresolvable icon is the consuming application's bug, and it belongs
+	 * wherever that application already sends its errors — which may be a reporter, or
+	 * nowhere at all. A library writing into a console it does not own leaves the reader
+	 * with noise they cannot route and cannot silence.
+	 */
 	protected readonly spec = computed<HubIconRenderSpec>(() => {
 		try {
 			return this.#registry.resolve(this.name(), this.pack(), this.variant());
 		} catch (error) {
-			console.error(error);
+			this.#errorHandler.handleError(error);
 			return { kind: 'classes', classes: '' };
 		}
 	});
@@ -119,7 +129,7 @@ export class HubIconComponent {
 		// properties, so sets that theme through their own variables follow the
 		// `--hub-icon-*` tokens.
 		effect(() => {
-			const vars = this.#registry.cssVars(this.pack());
+			const vars = this.#registry.cssVars(this.pack(), this.name());
 
 			if (!vars) {
 				return;
