@@ -30,12 +30,13 @@ class RecordingErrorHandler implements ErrorHandler {
 @Component({
 	standalone: true,
 	imports: [HubIconDirective],
-	template: `<i class="keep" hubIcon [name]="name()" [pack]="pack()" [variant]="variant()"></i>`
+	template: `<i class="keep" hubIcon [name]="name()" [pack]="pack()" [variant]="variant()" [label]="label()"></i>`
 })
 class DirectiveHostComponent {
 	readonly name = input('house');
 	readonly pack = input<string | undefined>(undefined);
 	readonly variant = input<string | undefined>(undefined);
+	readonly label = input<string | undefined>(undefined);
 }
 
 describe('HubIconDirective', () => {
@@ -120,6 +121,47 @@ describe('HubIconDirective', () => {
 
 		expect(el().textContent).toBe('');
 		expect(el().classList.contains('fa-house')).toBe(false);
+	});
+
+	describe('accessibility', () => {
+		it('hides a label-less icon from the accessibility tree, as the component does', () => {
+			const node = el();
+			expect(node.getAttribute('aria-hidden')).toBe('true');
+			expect(node.getAttribute('role')).toBeNull();
+			expect(node.getAttribute('aria-label')).toBeNull();
+		});
+
+		it('keeps the ligature text drawn but out of the accessibility tree', () => {
+			setInput('name', 'home');
+			setInput('pack', 'ms');
+			fixture.detectChanges();
+
+			const node = el();
+			expect(node.textContent?.trim()).toBe('home');
+			expect(node.getAttribute('aria-hidden')).toBe('true');
+		});
+
+		it('exposes a labelled icon as an image carrying that name', () => {
+			setInput('label', 'Go home');
+			fixture.detectChanges();
+
+			const node = el();
+			expect(node.getAttribute('role')).toBe('img');
+			expect(node.getAttribute('aria-label')).toBe('Go home');
+			expect(node.getAttribute('aria-hidden')).toBeNull();
+		});
+
+		it('goes back to decorative when the label is dropped', () => {
+			setInput('label', 'Go home');
+			fixture.detectChanges();
+			setInput('label', undefined);
+			fixture.detectChanges();
+
+			const node = el();
+			expect(node.getAttribute('aria-hidden')).toBe('true');
+			expect(node.getAttribute('role')).toBeNull();
+			expect(node.getAttribute('aria-label')).toBeNull();
+		});
 	});
 
 	it('hands an unresolvable name to the application error handler and writes nothing to the console', () => {

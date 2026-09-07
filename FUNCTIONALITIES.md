@@ -25,7 +25,7 @@ The library ships two consumers of the same registry: `<hub-icon>`, the standalo
 | **Accessibility** | Accessible name (`label` → `role="img"` + `aria-label`) | ✅ |
 | | Decorative by default (`aria-hidden="true"`) | ✅ |
 | | `alt` carried by an `img` render spec | ✅ |
-| **Resilience** | Unknown pack fails soft (logs, renders an empty glyph) | ❌ |
+| **Resilience** | Unknown pack fails soft (reported to `ErrorHandler`, renders an empty glyph) | ❌ |
 
 ## Directive (`[hubIcon]`)
 
@@ -36,7 +36,10 @@ The library ships two consumers of the same registry: `<hub-icon>`, the standalo
 | | `name` winning over `[hubIcon]` when both are set | ❌ |
 | | Explicit pack / variant | ✅ |
 | | `pack:variant:name` shorthand | ❌ |
-| **Host handling** | Keeps the host's own classes and attributes | ❌ |
+| **Accessibility** | Accessible name (`label` → `role="img"` + `aria-label`) | ✅ |
+| | Decorative by default (`aria-hidden="true"`) | ✅ |
+| | Ligature text hidden from the accessibility tree | ✅ |
+| **Host handling** | Keeps the host's own classes, and every attribute but `role` / `aria-label` / `aria-hidden` | ❌ |
 | | Removes only its own classes when the icon changes | ❌ |
 | | Empties the host when the reference becomes empty | ❌ |
 | **Render kinds** | Class glyphs and ligature glyphs | ✅ |

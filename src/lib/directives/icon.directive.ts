@@ -12,15 +12,25 @@ import { HubIconRegistry } from '../services/icon-registry.service';
  * directive keeps the host's own classes intact, only adding/removing the
  * pack-resolved ones across changes.
  *
+ * Accessibility follows {@link HubIconComponent}: decorative unless `label` is
+ * set. The host therefore owns `role`, `aria-label` and `aria-hidden` — write
+ * the accessible name through `label`, not as an attribute on the element.
+ *
  * @example
  * ```html
  * <i hubIcon name="house"></i>
  * <span [hubIcon]="'home'" pack="ms" variant="rounded"></span>
+ * <button type="button"><i hubIcon name="trash" label="Delete"></i></button>
  * ```
  */
 @Directive({
 	selector: '[hubIcon]',
-	host: { class: 'hub-icon' }
+	host: {
+		class: 'hub-icon',
+		'[attr.role]': 'label() ? "img" : null',
+		'[attr.aria-label]': 'label() || null',
+		'[attr.aria-hidden]': 'label() ? null : "true"'
+	}
 })
 export class HubIconDirective {
 	readonly #registry = inject(HubIconRegistry);
@@ -38,6 +48,16 @@ export class HubIconDirective {
 
 	/** Variant. Overrides a shorthand variant and the pack default. */
 	readonly variant = input<string>();
+
+	/**
+	 * Accessible label. When set, the host is exposed as `role="img"` with this
+	 * `aria-label`; when omitted the icon is decorative (`aria-hidden="true"`).
+	 *
+	 * Hiding the decorative case is what keeps the ligature text out of the
+	 * accessibility tree: a font that draws its glyph from a ligature needs that
+	 * text in the DOM, so it cannot be removed — only hidden.
+	 */
+	readonly label = input<string>();
 
 	/** Pack-resolved classes applied on the previous render, removed before the next. */
 	#applied: string[] = [];

@@ -116,6 +116,9 @@ Decora un elemento tuyo — la directiva conserva tus clases y solo gestiona las
 ```html
 <i class="me-2" hubIcon name="house"></i>
 <span [hubIcon]="'home'" pack="ms" variant="rounded"></span>
+
+<!-- un icono que significa algo por sí solo -->
+<i hubIcon name="trash" label="Eliminar"></i>
 ```
 
 > Para uso solo con la directiva (sin renderizar nunca `<hub-icon>`), incluye los estilos base una vez: `@use 'ng-hub-ui-icons/styles' as *;`.
@@ -174,7 +177,7 @@ Sin adapter — basta proyectar un `<hub-icon>` como contenido. Por ejemplo, den
 | `variant` | `string` | por defecto del pack | Variante; sobrescribe la variante del atajo. |
 | `size` | `string` | `1em` | Tamaño por instancia (`--hub-icon-size`). _(solo componente)_ |
 | `color` | `string` | `currentColor` | Color por instancia (`--hub-icon-color`). _(solo componente)_ |
-| `label` | `string` | — | Etiqueta accesible (`role="img"` + `aria-label`). _(solo componente)_ |
+| `label` | `string` | — | Etiqueta accesible (`role="img"` + `aria-label`); sin ella el icono queda `aria-hidden="true"`. |
 | `spin` | `boolean` | `false` | Rotación continua. _(solo componente)_ |
 
 ### Packs
@@ -195,7 +198,15 @@ Sin adapter — basta proyectar un `<hub-icon>` como contenido. Por ejemplo, den
 
 ## ♿ Accesibilidad
 
-Pasa `label` para iconos con significado (se renderizan como `role="img"` con `aria-label`). Omítelo en iconos decorativos, que quedan automáticamente `aria-hidden="true"`.
+Pasa `label` para iconos con significado (se renderizan como `role="img"` con `aria-label`). Omítelo en iconos decorativos, que quedan automáticamente `aria-hidden="true"`. Las dos formas se comportan igual: `<hub-icon>` y `[hubIcon]`.
+
+Ocultar el caso decorativo importa más de lo que parece con fuentes por ligadura como Material Symbols, donde el glifo se dibuja a partir del nombre del icono escrito como texto dentro del elemento: oculto es un dibujo; expuesto, un lector de pantalla lee «home» junto al enlace que ya dice Home.
+
+Como la directiva gestiona `role`, `aria-label` y `aria-hidden` en su host, el nombre accesible se pone con `label`, no como atributo del elemento. Un icono que es en sí el control va dentro del control, que conserva su rol y su nombre:
+
+```html
+<button type="button" aria-label="Eliminar"><i hubIcon name="trash"></i></button>
+```
 
 ## 📊 Changelog
 

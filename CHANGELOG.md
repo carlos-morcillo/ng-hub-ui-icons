@@ -5,6 +5,30 @@ All notable changes to `ng-hub-ui-icons` are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [22.2.0] - 2026-09-07
+
+### Added
+
+- **`label` on the `[hubIcon]` directive**, the same accessible-name input `<hub-icon>` already
+  had: it exposes the host as `role="img"` with that `aria-label`. Without it the icon is
+  decorative, which is what the component has always done and what the directive now does too.
+
+### Fixed
+
+- **A screen reader no longer reads the icon's name out loud.** The directive declared nothing
+  but `class="hub-icon"` on its host — no `aria-hidden`, no role, no name — so every icon drawn
+  with `[hubIcon]` was an unlabelled element in the accessibility tree; and with a ligature font
+  such as Material Symbols the mechanism that draws the glyph is the icon's name written as text
+  inside the element, so what got announced was the word "home" sitting next to the link that
+  already said Home. The text has to stay for the glyph to be drawn, so it is hidden rather than
+  removed: a label-less icon is now `aria-hidden="true"`, and a labelled one is `role="img"` with
+  its `aria-label`, where the ligature is ignored because the name comes from the label. This is
+  what `<hub-icon>` has done since the first release; the directive had simply been left behind,
+  and the two forms disagreeing was half the bug.
+
+  **Breaking for a host carrying its own `role` / `aria-label` / `aria-hidden`** — see
+  [`BREAKING_CHANGES.md`](./BREAKING_CHANGES.md).
+
 ## [22.1.3] - 2026-09-06
 
 ### Added

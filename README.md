@@ -116,6 +116,9 @@ Decorate an element you own — the directive keeps your classes and only manage
 ```html
 <i class="me-2" hubIcon name="house"></i>
 <span [hubIcon]="'home'" pack="ms" variant="rounded"></span>
+
+<!-- an icon that carries meaning on its own -->
+<i hubIcon name="trash" label="Delete"></i>
 ```
 
 > For directive-only usage (no `<hub-icon>` rendered anywhere), include the base styles once: `@use 'ng-hub-ui-icons/styles' as *;`.
@@ -174,7 +177,7 @@ No adapter needed — just project a `<hub-icon>` as content. For example, insid
 | `variant` | `string` | pack default | Variant; overrides a shorthand variant. |
 | `size` | `string` | `1em` | Per-instance size (`--hub-icon-size`). _(component only)_ |
 | `color` | `string` | `currentColor` | Per-instance color (`--hub-icon-color`). _(component only)_ |
-| `label` | `string` | — | Accessible label (`role="img"` + `aria-label`). _(component only)_ |
+| `label` | `string` | — | Accessible label (`role="img"` + `aria-label`); without it the icon is `aria-hidden="true"`. |
 | `spin` | `boolean` | `false` | Continuously rotate. _(component only)_ |
 
 ### Packs
@@ -195,7 +198,15 @@ No adapter needed — just project a `<hub-icon>` as content. For example, insid
 
 ## ♿ Accessibility
 
-Pass `label` for meaningful icons (rendered as `role="img"` with `aria-label`). Omit it for decorative icons, which are automatically `aria-hidden="true"`.
+Pass `label` for meaningful icons (rendered as `role="img"` with `aria-label`). Omit it for decorative icons, which are automatically `aria-hidden="true"`. Both forms behave the same way: `<hub-icon>` and `[hubIcon]`.
+
+Hiding the decorative case matters more than it looks with ligature fonts such as Material Symbols, where the glyph is drawn from the icon's name written as text inside the element — hidden, it is a drawing; exposed, a screen reader reads "home" beside the link that already says Home.
+
+Because the directive owns `role`, `aria-label` and `aria-hidden` on its host, write the accessible name through `label` rather than as an attribute on the element. An icon that is itself the control belongs inside the control, which keeps its own role and name:
+
+```html
+<button type="button" aria-label="Delete"><i hubIcon name="trash"></i></button>
+```
 
 ## 📊 Changelog
 
