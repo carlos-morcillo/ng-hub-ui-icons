@@ -47,6 +47,12 @@ import { HubIconRegistry } from '../../services/icon-registry.service';
 		'[class.hub-icon--spin]': 'spin()',
 		'[style.--hub-icon-size]': 'size() || null',
 		'[style.--hub-icon-color]': 'color() || null',
+		// Also written as a plain inline `color`, and not only as the token: the base
+		// stylesheet reads the token from a zero-specificity rule so that a utility class
+		// can recolour an icon, which means the token alone would now lose to that class.
+		// An inline style outranks any class, which is the right order for an input written
+		// on one icon and no other.
+		'[style.color]': 'color() || null',
 		'[attr.role]': 'label() ? "img" : null',
 		'[attr.aria-label]': 'label() || null',
 		'[attr.aria-hidden]': 'label() ? null : "true"'

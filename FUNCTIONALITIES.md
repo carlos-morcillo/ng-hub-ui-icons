@@ -80,6 +80,7 @@ The library ships two consumers of the same registry: `<hub-icon>`, the standalo
 | | `--hub-icon-weight` | ✅ |
 | | `--hub-icon-grade` | ❌ |
 | | `--hub-icon-optical-size` | ❌ |
+| **Cascade** | A consumer class (`.text-danger`, or one of your own) overrides the library, whatever the source order | ✅ |
 | **Sass** | `hub-icon-theme()` mixin | ✅ |
 | | `ng-hub-ui-icons/styles` subpath entry points | ❌ |
 | **Structure** | BEM classes (`hub-icon__glyph`, `__svg`, `__img`) | ❌ |

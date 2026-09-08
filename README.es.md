@@ -156,6 +156,14 @@ Todos los packs leen los mismos tokens, así que tematizas una vez:
 }
 ```
 
+Una utilidad de color también funciona — la `.text-danger` del design system, o una clase tuya —, porque
+todas las reglas que esta librería escribe sobre el elemento del icono tienen especificidad cero, así que
+gana la tuya sea cual sea el orden:
+
+```html
+<hub-icon name="triangle-exclamation" class="text-danger" />
+```
+
 ### Iconos en otros componentes
 
 Sin adapter — basta proyectar un `<hub-icon>` como contenido. Por ejemplo, dentro de un botón de `ng-hub-ui` el lado del icono sigue el orden del marcado:
@@ -176,7 +184,7 @@ Sin adapter — basta proyectar un `<hub-icon>` como contenido. Por ejemplo, den
 | `pack` | `string` | `defaultPack` | Clave del pack; sobrescribe el pack del atajo. |
 | `variant` | `string` | por defecto del pack | Variante; sobrescribe la variante del atajo. |
 | `size` | `string` | `1em` | Tamaño por instancia (`--hub-icon-size`). _(solo componente)_ |
-| `color` | `string` | `currentColor` | Color por instancia (`--hub-icon-color`). _(solo componente)_ |
+| `color` | `string` | `currentColor` | Color por instancia; se escribe en el host como `--hub-icon-color` y como `color` en línea, así que gana a una utilidad de color puesta en el mismo elemento. _(solo componente)_ |
 | `label` | `string` | — | Etiqueta accesible (`role="img"` + `aria-label`); sin ella el icono queda `aria-hidden="true"`. |
 | `spin` | `boolean` | `false` | Rotación continua. _(solo componente)_ |
 
@@ -190,7 +198,7 @@ Sin adapter — basta proyectar un `<hub-icon>` como contenido. Por ejemplo, den
 | Token | Por defecto | Descripción |
 | ----- | ----------- | ----------- |
 | `--hub-icon-size` | `1em` | font-size del glyph / ancho y alto del SVG |
-| `--hub-icon-color` | `currentColor` | color del glyph / fill del SVG |
+| `--hub-icon-color` | `currentColor` | color del glyph, y a través de él el fill del SVG. Se aplica desde una regla de especificidad cero, así que una utilidad de color —o cualquier regla tuya sobre el mismo elemento— gana. |
 | `--hub-icon-fill` | `0` | eje `FILL` de Material Symbols |
 | `--hub-icon-weight` | `400` | eje `wght` de Material Symbols |
 | `--hub-icon-grade` | `0` | eje `GRAD` de Material Symbols |

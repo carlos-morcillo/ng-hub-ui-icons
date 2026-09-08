@@ -5,6 +5,46 @@ All notable changes to `ng-hub-ui-icons` are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [22.3.0] - 2026-09-07
+
+### Fixed
+
+- **A colour utility on an icon does something again.** `<hub-icon class="text-danger">` came out in
+  the default ink, and so did `text-warning`, `text-success` and every other utility: the class was
+  on the element, visible in the attribute, and changed nothing. The library declared its own
+  `color` in a rule named `.hub-icon` — one class, exactly what a utility is — and this stylesheet
+  is injected at runtime, so it always lands after the sheet the application shipped. Tied on
+  specificity, decided by source order, the primitive won. It cost a confirm dialog in a real
+  product the one thing that said "this destroys": the icon meant to be red and the icon meant to
+  be amber computed to the same `rgb(33, 37, 41)`.
+
+  It was never only about colour, either — `display: inline-flex` beat `.d-none` the same way, and
+  would have beaten whatever utility anyone wrote next.
+
+  Every rule the library lands on the icon element is now written through `:where()`, which matches
+  the same element and contributes **zero** specificity: any declaration a consumer writes — a
+  design-system utility, a class of their own, a plain `hub-icon { … }` rule — outranks the
+  primitive whatever the order, and the fix holds for classes this library will never hear of. It
+  is the same move, for the same reason, that `ng-hub-ui-modal` made in its 22.10.0.
+
+  **Two consequences worth reading before upgrading** — see
+  [`BREAKING_CHANGES.md`](./BREAKING_CHANGES.md).
+
+### Changed
+
+- **The `color` input is now also written as an inline `color`**, beside the `--hub-icon-color` it
+  has always set. With the token read from a zero-specificity rule, the token alone would have lost
+  to a utility class sitting on the same element — and an input written on one icon and no other is
+  the more deliberate of the two. An inline style outranks any class, which puts them in that
+  order. Nothing changes for an icon that carries no such class.
+
+- **An SVG icon now takes its `fill` from `currentColor` instead of `var(--hub-icon-color)`.** The
+  element's own `color` is where the token, a utility and the `color` input have already been
+  resolved against each other, so reading it back is what keeps a drawn glyph and a filled path the
+  same colour. Reading the token directly left an SVG on the themed value while a utility recoloured
+  everything around it. Same result wherever only one of the three is in play, which is every case
+  that worked before.
+
 ## [22.2.0] - 2026-09-07
 
 ### Added

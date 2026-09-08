@@ -5,6 +5,58 @@ This file documents breaking changes and migration steps for `ng-hub-ui-icons`.
 The major version tracks the targeted Angular major, so it cannot be raised to signal a
 breaking change. This file is the notice the version number cannot give.
 
+## [22.3.0] - 2026-09-07
+
+### The library's own rules on the icon element now carry zero specificity
+
+**What changed.** Everything this library declares on the icon element — the `--hub-icon-*`
+defaults, the box, the `color`, the spin animation — is written through `:where(.hub-icon)`
+instead of `.hub-icon`. `:where()` matches the same element and contributes no specificity at
+all, so the primitive no longer competes with a consumer's rule: yours wins, whatever the
+source order. That is the point, and it is what makes `<hub-icon class="text-danger">` paint.
+
+**Who is affected.** Anyone whose own styling of icons relied, knowingly or not, on the
+library winning:
+
+- **A type selector now beats the library.** `[hubIcon]` is usually applied to an `<i>` or a
+  `<span>`, and a global `i { color: … }` or `span { font-size: … }` is `(0,0,1)` — more than
+  zero. Sheets that carried such a rule harmlessly for years may now recolour or resize every
+  icon on the page.
+- **`!important` in a consumer sheet is no longer needed and no longer harmless.** Rules
+  written to out-shout the primitive still win, but they now also out-shout everything the
+  consumer writes later, including a variant class of their own.
+
+**How to migrate.** Nothing to do in the normal case: an application that never styled
+`.hub-icon` sees only the fix. Where an icon now takes a colour or a size it should not, the
+cause is a rule of your own that was previously being ignored — narrow it to the elements it
+was meant for, or drop the `!important` that is no longer buying anything:
+
+```css
+/* before — written to beat the primitive, now over-ranked and over-reaching */
+.toolbar hub-icon {
+	color: var(--brand) !important;
+}
+
+/* after — a plain rule is enough */
+.toolbar hub-icon {
+	color: var(--brand);
+}
+```
+
+### An SVG icon reads its `fill` from `currentColor`
+
+**What changed.** `.hub-icon svg` was filled with `var(--hub-icon-color)`; it is now filled
+with `currentColor`, which is the element's own `color` — the value the token, a utility class
+and the `color` input have already been resolved against each other to produce.
+
+**Who is affected.** Anyone who set `--hub-icon-color` on the icon and then overrode `color`
+on the same element by another route, expecting the two to disagree: the glyph followed one
+and the SVG the other. They now agree, and the winner is `color`.
+
+**How to migrate.** Set the colour once, through whichever of the three routes you prefer —
+the token, a class, or the `color` input. A theme that only ever set `--hub-icon-color`
+behaves exactly as before.
+
 ## [22.2.0] - 2026-09-07
 
 ### `[hubIcon]` now owns `role`, `aria-label` and `aria-hidden` on its host

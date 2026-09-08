@@ -156,6 +156,13 @@ Every pack reads the same tokens, so you theme once:
 }
 ```
 
+A plain colour utility works too — the design system's `.text-danger`, or a class of your own — because
+every rule this library writes on the icon element is zero-specificity, so yours wins whatever the order:
+
+```html
+<hub-icon name="triangle-exclamation" class="text-danger" />
+```
+
 ### Icons in other components
 
 No adapter needed — just project a `<hub-icon>` as content. For example, inside an `ng-hub-ui` button the icon's side follows the markup order:
@@ -176,7 +183,7 @@ No adapter needed — just project a `<hub-icon>` as content. For example, insid
 | `pack` | `string` | `defaultPack` | Pack key; overrides a shorthand pack. |
 | `variant` | `string` | pack default | Variant; overrides a shorthand variant. |
 | `size` | `string` | `1em` | Per-instance size (`--hub-icon-size`). _(component only)_ |
-| `color` | `string` | `currentColor` | Per-instance color (`--hub-icon-color`). _(component only)_ |
+| `color` | `string` | `currentColor` | Per-instance color, written to the host as both `--hub-icon-color` and an inline `color`, so it outranks a colour utility on the same element. _(component only)_ |
 | `label` | `string` | — | Accessible label (`role="img"` + `aria-label`); without it the icon is `aria-hidden="true"`. |
 | `spin` | `boolean` | `false` | Continuously rotate. _(component only)_ |
 
@@ -190,7 +197,7 @@ No adapter needed — just project a `<hub-icon>` as content. For example, insid
 | Token | Default | Description |
 | ----- | ------- | ----------- |
 | `--hub-icon-size` | `1em` | Glyph font-size / SVG width & height |
-| `--hub-icon-color` | `currentColor` | Glyph color / SVG fill |
+| `--hub-icon-color` | `currentColor` | Glyph color, and the SVG fill through it. Applied from a zero-specificity rule, so a colour utility or any rule of your own on the same element wins over it. |
 | `--hub-icon-fill` | `0` | Material Symbols `FILL` axis |
 | `--hub-icon-weight` | `400` | Material Symbols `wght` axis |
 | `--hub-icon-grade` | `0` | Material Symbols `GRAD` axis |

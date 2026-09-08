@@ -6,6 +6,24 @@
 //   @use 'ng-hub-ui-icons/styles' as *;   // or 'ng-hub-ui-icons/styles/icon'
 //
 // Theme any icon set uniformly through the `--hub-icon-*` tokens below.
+//
+// ── Why every rule that lands on the icon element is wrapped in `:where()` ──
+//
+// This stylesheet is injected at RUNTIME, so it always lands after the sheet the
+// consuming application shipped. Written as `.hub-icon { … }` — one class, like
+// `.text-danger` or any other utility — the primitive tied on specificity and won on
+// source order, so `<hub-icon class="text-danger">` came out in the default ink and
+// the class did nothing at all. It was not a colour bug either: `.d-none` on an icon
+// lost to `display: inline-flex` the same way, and so would every utility anyone
+// writes next.
+//
+// `:where()` matches exactly the same element and contributes ZERO specificity, so
+// any declaration a consumer writes — a design-system utility, a class of their own,
+// a plain `hub-icon { … }` rule — outranks the primitive whatever the order. It is the
+// same move, for the same reason, that `ng-hub-ui-modal` documents in `modal.scss`.
+//
+// Descendant rules keep their specificity on purpose: `.hub-icon__glyph` and friends
+// dress elements the library itself creates, which no consumer class lands on.
 
 :where(.hub-icon) {
 	--hub-icon-size: 1em;
@@ -17,9 +35,7 @@
 	--hub-icon-weight: 400;
 	--hub-icon-grade: 0;
 	--hub-icon-optical-size: 24;
-}
 
-.hub-icon {
 	display: inline-flex;
 	align-items: center;
 	justify-content: center;
@@ -53,14 +69,19 @@
 	display: inline-flex;
 }
 
+// `currentColor`, not `var(--hub-icon-color)`: the element's own `color` is where the
+// token, a consumer utility and the `color` input have already been resolved against
+// each other, so reading it back is what keeps a drawn glyph and a filled path the
+// same colour. Reading the token instead left an SVG icon on the themed value while
+// the utility recoloured everything around it.
 .hub-icon__svg svg,
 .hub-icon > svg {
 	inline-size: 100%;
 	block-size: 100%;
-	fill: var(--hub-icon-color);
+	fill: currentColor;
 }
 
-.hub-icon--spin {
+:where(.hub-icon--spin) {
 	animation: hub-icon-spin 1s linear infinite;
 }
 
