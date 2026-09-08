@@ -5,6 +5,17 @@ All notable changes to `ng-hub-ui-icons` are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [22.3.1] - 2026-09-08
+
+### Added
+
+- **`ng-hub-ui-ds` is declared as an optional peer dependency** (`>=22.0.0`). The whole
+  `--hub-icon-*` block resolves through the family's `--hub-sys-*` / `--hub-ref-*` ladder — that is
+  how an icon follows the theme's ink and its dark mode without being told to — and the manifest
+  said nothing about it, so a consumer reading the package on npm had no way to learn which package
+  supplies those values. It is genuinely optional: every token ends in a literal fallback and the
+  renderer works without it.
+
 ## [22.3.0] - 2026-09-07
 
 ### Fixed
